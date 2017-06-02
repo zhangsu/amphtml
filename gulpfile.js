@@ -87,6 +87,7 @@ declareExtension('amp-fx-flying-carpet', '0.1', true);
 declareExtension('amp-fx-parallax', '0.1', false);
 declareExtension('amp-gfycat', '0.1', false);
 declareExtension('amp-gist', '0.1', false);
+declareExtension('amp-google-doc', '0.1', false);
 declareExtension('amp-hulu', '0.1', false);
 declareExtension('amp-iframe', '0.1', false, 'NO_TYPE_CHECK');
 declareExtension('amp-ima-video', '0.1', false);

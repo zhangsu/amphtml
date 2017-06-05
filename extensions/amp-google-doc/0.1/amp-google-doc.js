@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import {Layout} from '../../../src/layout';
+import {assertHttpsUrl} from '../../../src/url';
+import {isLayoutSizeDefined} from '../../../src/layout';
+import {removeElement} from '../../../src/dom';
 
 export class AmpGoogleDoc extends AMP.BaseElement {
 
@@ -22,23 +24,70 @@ export class AmpGoogleDoc extends AMP.BaseElement {
   constructor(element) {
     super(element);
 
-    /** @private {string} */
-    this.myText_ = 'hello world';
+    /** @private @const {string} */
+    this.src_ = null;
+    /** @private {?HTMLIFrameElement} */
+    this.iframe_ = null;
+  }
 
-    /** @private {!Element} */
-    this.container_ = this.win.document.createElement('div');
+  /** @override */
+  renderOutsideViewport() {
+    // We are conservative about loading heavy embeds.
+    // This will still start loading before they become visible, but it
+    // won't typically load a large number of embeds.
+    return 0.75;
   }
 
   /** @override */
   buildCallback() {
-    this.container_.textContent = this.myText_;
-    this.element.appendChild(this.container_);
-    this.applyFillContent(this.container_, /* replacedContent */ true);
+    this.src_ = assertHttpsUrl(this.element.getAttribute('src'), this.element);
+  }
+
+  /**
+   * @param {boolean=} opt_onLayout
+   * @override
+   */
+  preconnectCallback(opt_onLayout) {
+    if (this.src_) {
+      this.preconnect.url(this.src_, opt_onLayout);
+    }
   }
 
   /** @override */
   isLayoutSupported(layout) {
-    return layout == Layout.RESPONSIVE;
+    return isLayoutSizeDefined(layout);
+  }
+
+  /** @override */
+  layoutCallback() {
+    const iframe = this.element.ownerDocument.createElement('iframe');
+    iframe.onload = () => {
+      // Chrome does not reflect the iframe readystate.
+      iframe.readyState = 'complete';
+    };
+    this.applyFillContent(iframe);
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowfullscreen', 'true');
+    iframe.setAttribute('src', this.src_);
+    this.element.appendChild(iframe);
+
+    this.iframe_ = iframe;
+
+    return this.loadPromise(iframe);
+  }
+
+  /** @override */
+  unlayoutOnPause() {
+    return true;
+  }
+
+  /** @override */
+  unlayoutCallback() {
+    if (this.iframe_) {
+      removeElement(this.iframe_);
+      this.iframe_ = null;
+    }
+    return true;
   }
 }
 

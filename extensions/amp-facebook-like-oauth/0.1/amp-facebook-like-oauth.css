@@ -1,0 +1,28 @@
+.like-button {
+  background: #4267b2;
+  border: 1px solid #4267b2;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  height: 28px;
+  padding: 0 4px;
+  margin: 0 4px;
+}
+
+.like-button:hover {
+  background: #4255b2;
+}
+
+.like-button.liked {
+  background: #4080ff;
+}
+
+.like-count {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 28px;
+  margin: 0 4px;
+}

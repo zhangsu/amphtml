@@ -1,0 +1,29 @@
+.container {
+  background-color: #eee;
+  font-family: Arial;
+  font-size: 15px;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.comment-container {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 4px 4px 4px 4px #ddd;
+  margin: 8px 0;
+  padding: 8px;
+}
+
+.name {
+  color: #888;
+  font-size: 13px;
+}
+
+.created-time {
+  color: #ccc;
+  font-size: 12px;
+}
+
+a {
+  margin: 0 4px;
+}
